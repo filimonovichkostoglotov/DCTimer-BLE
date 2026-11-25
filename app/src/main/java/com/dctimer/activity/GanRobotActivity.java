@@ -855,8 +855,7 @@ public class GanRobotActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 31) {
             return new String[] {
                     Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+                    Manifest.permission.BLUETOOTH_CONNECT
             };
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -878,6 +877,9 @@ public class GanRobotActivity extends AppCompatActivity {
     }
 
     private boolean isLocationEnabled() {
+        if (Build.VERSION.SDK_INT >= 31) {
+            return true;
+        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }

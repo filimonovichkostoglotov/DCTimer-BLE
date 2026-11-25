@@ -351,8 +351,7 @@ public final class GanRobotBleClient {
         if (Build.VERSION.SDK_INT >= 31) {
             permissions = new String[] {
                     Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+                    Manifest.permission.BLUETOOTH_CONNECT
             };
         } else {
             permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION };

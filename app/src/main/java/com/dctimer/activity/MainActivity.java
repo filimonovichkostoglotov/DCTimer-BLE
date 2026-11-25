@@ -1334,8 +1334,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (Build.VERSION.SDK_INT >= ANDROID_API_S) {
             return new String[] {
                     PERMISSION_BLUETOOTH_SCAN,
-                    PERMISSION_BLUETOOTH_CONNECT,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+                    PERMISSION_BLUETOOTH_CONNECT
             };
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1400,6 +1399,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private boolean isLocationServiceEnabled() {
+        if (Build.VERSION.SDK_INT >= ANDROID_API_S) {
+            return true;
+        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
@@ -1685,7 +1687,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             clearSmartCubeScrambleCache();
             return;
         }
-        String scramble = currentScramble.getScramble().replace('\n', ' ').trim();
+        String scramble = currentScramble.getSmartCubeScrambleFaceMoves();
         String cacheKey = buildSmartCubeScrambleCacheKey(scramble);
         if (TextUtils.equals(smartCubeScrambleCache, cacheKey)) {
             return;
@@ -1872,7 +1874,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private CharSequence appendSmartCubeScrambleHint(SpannableStringBuilder builder) {
-        if (currentScramble == null || TextUtils.isEmpty(currentScramble.getHint())) {
+        if (currentScramble == null) {
+            return builder;
+        }
+        String scramble = currentScramble.getScramble().replace('\n', ' ').trim();
+        String faceMoves = currentScramble.getSmartCubeScrambleFaceMoves();
+        if (scramble.length() > faceMoves.length()) {
+            builder.append(scramble.substring(faceMoves.length()));
+        }
+        if (TextUtils.isEmpty(currentScramble.getHint())) {
             return builder;
         }
         builder.append(currentScramble.getHint());
@@ -1904,7 +1914,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || TextUtils.isEmpty(currentScramble.getScramble())) {
             return SOLVED_FACELET;
         }
-        String[] moves = currentScramble.getScramble().replace('\n', ' ').trim().split("\\s+");
+        String[] moves = currentScramble.getSmartCubeScrambleFaceMoves().split("\\s+");
         String startState = currentScramble.getCubeState();
         for (int i = moves.length - 1; i >= 0; i--) {
             int moveIndex = parseScrambleMove(moves[i]);

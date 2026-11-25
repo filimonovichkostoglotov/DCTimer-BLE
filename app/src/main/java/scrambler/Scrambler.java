@@ -212,6 +212,15 @@ public class Scrambler {
         return scramble;
     }
 
+    public String getSmartCubeScrambleFaceMoves() {
+        if (scramble == null) return "";
+        String moves = scramble.replace('\n', ' ').trim();
+        if (category == 43 || category == 44) {
+            moves = moves.replaceFirst("\\s+x(?:2|')?$", "");
+        }
+        return moves;
+    }
+
     public String getScrambleWithHint(boolean landscape) {
         if (scramble == null) return "error";
         if (landscape) return scramble.replace("\n", " ") + hint;
@@ -261,7 +270,7 @@ public class Scrambler {
 
     public String getCubeState() {
         if ((cubeState == null || cubeState.length() == 0) && is333Scramble() && scramble != null && scramble.length() > 0) {
-            return Tools.fromScramble(scramble);
+            return Tools.fromScramble(getSmartCubeScrambleFaceMoves());
         }
         return cubeState;
     }
@@ -1474,7 +1483,7 @@ public class Scrambler {
         int idx = category >> 5;
         int sub = category & 0x1f;
         return (idx == -1 && (sub == 0 || sub == 5 || sub == 7)) ||
-                (idx == 1 && (sub == 0 || sub == 1 || sub == 19)) ||
+                (idx == 1 && sub <= 24) ||
                 isSmart333TrainingScramble();
     }
 

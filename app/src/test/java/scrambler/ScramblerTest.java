@@ -51,6 +51,43 @@ public class ScramblerTest {
     }
 
     @Test
+    public void legacy333TrainingScramblesProvideFaceMoveTargets() {
+        Scrambler scrambler = new Scrambler(null);
+
+        for (int category = 34; category <= 56; category++) {
+            if (category == 51) {
+                scrambler.setSingleScramble(category, "R U2", "", 3);
+            } else {
+                scrambler.generateScramble(category, true);
+            }
+
+            assertTrue("category " + category, scrambler.is333Scramble());
+            assertEquals("category " + category, scrambler.getCubeState(),
+                    Tools.fromScramble(scrambler.getSmartCubeScrambleFaceMoves()));
+        }
+        scrambler.setCategory(57);
+        assertFalse(scrambler.is333Scramble());
+        scrambler.setCategory(64);
+        assertFalse(scrambler.is333Scramble());
+    }
+
+    @Test
+    public void legacyRouxTrailingRotationDoesNotChangePhysicalTarget() {
+        Scrambler scrambler = new Scrambler(null);
+        for (int category : new int[] {43, 44}) {
+            for (String rotation : new String[] {"x", "x2", "x'"}) {
+                scrambler.setSingleScramble(category, "R U2 " + rotation, "", 3);
+
+                assertEquals("R U2", scrambler.getSmartCubeScrambleFaceMoves());
+                assertEquals(Tools.fromScramble("R U2"), scrambler.getCubeState());
+                assertEquals("R U2 " + rotation, scrambler.getScramble());
+            }
+        }
+        scrambler.setSingleScramble(34, "R U2 x", "", 3);
+        assertEquals("R U2 x", scrambler.getSmartCubeScrambleFaceMoves());
+    }
+
+    @Test
     public void cornerTurningOctahedronScrambleImageStaysDisabled() {
         Scrambler scrambler = new Scrambler(null);
 

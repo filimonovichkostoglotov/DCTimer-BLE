@@ -32,7 +32,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.dctimer.ble"
+        applicationId "com.dctimer.ble.test"
         minSdk 14
         targetSdk 35
         versionCode appVersionCode
